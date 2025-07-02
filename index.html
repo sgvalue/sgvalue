@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔️ 캐릭터 탐색기 - 조직에서 나의 캐릭터는?</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=MedievalSharp&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="rpg-background">
+    <div class="container">
+      <header class="rpg-header">
+        <h1>캐릭터 탐색기</h1>
+        <p class="subtitle">조직에서 당신의 역할을 발견해보세요</p>
+        <div class="decorative-line">
+          <span>✨</span>
+          <span class="line"></span>
+          <span>✨</span>
+        </div>
+      </header>
+
+      <main class="rpg-card">
+        <!-- 퀘스트 입력 섹션 -->
+        <section class="quest-section">
+          <div class="input-container">
+            <label for="visionInput">🎯 당신이 이해한 목표와 역할은 무엇인가요?</label>
+            <textarea 
+              id="visionInput" 
+              placeholder="그룹의 Mega Value와 업무의 가치, 과제를 명확히 이해한 나의 목표와 역할은.. "
+              rows="4"
+            ></textarea>
+          </div>
+        </section>
+
+        <!-- 직업군 탐색 버튼 -->
+        <section class="discover-section">
+          <div class="discover-container">
+            <h3>🎯 캐릭터 분석</h3>
+            <p>당신에게 맞는 직업 캐릭터를 찾아보세요</p>
+            <button id="findClassBtn" class="discover-btn">
+              <span class="btn-text">분석하기</span>
+              ✨
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <!-- RPG 스타일 모달 팝업 -->
+      <div id="modal" class="rpg-modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="character-card">
+          <button id="closeModal" class="close-btn">&times;</button>
+          
+          
+          
+          <div class="character-details">
+            <h2 id="characterName" class="character-title"></h2>
+            <div class="character-stats">
+              <div id="characterDescription" class="character-desc"></div>
+            </div>
+            
+            <div class="character-footer">
+              <div class="rarity-badge">★★★★★ 전설급 직업군</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 배경 장식 요소들 -->
+    <div class="bg-decorations">
+      <div class="floating-element sword">⚔️</div>
+      <div class="floating-element shield">🛡️</div>
+      <div class="floating-element magic">✨</div>
+      <div class="floating-element bow">🏹</div>
+      <div class="floating-element crystal">💎</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
