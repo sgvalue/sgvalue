@@ -4,78 +4,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚔️ 캐릭터 탐색기 - 조직에서 나의 캐릭터는?</title>
+  <title>그룹가치 '이해' 캠페인 – 나의 캐릭터를 찾아라!</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=MedievalSharp&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="rpg-background">
-    <div class="container">
-      <header class="rpg-header">
-        <h1>캐릭터 탐색기</h1>
-        <p class="subtitle">조직에서 당신의 역할을 발견해보세요</p>
-        <div class="decorative-line">
-          <span>✨</span>
-          <span class="line"></span>
-          <span>✨</span>
+  <!-- 메인 화면 -->
+  <div id="mainScreen" class="screen">
+    <div class="main-container">
+      <div class="title-section">
+        <h1 class="main-title">그룹가치 이해 캠페인</h1>
+        <h2 class="sub-title">나의 캐릭터를 찾아라!</h2>
+        <p class="description">소통과 공유를 통해 '이해'하고<br>나의 캐릭터를 찾아보세요</p>
+      </div>
+      <button id="startBtn" class="start-btn">시작하기</button>
+    </div>
+  </div>
+
+  <!-- 진단 화면 -->
+  <div id="diagnosisScreen" class="screen hidden">
+    <div class="diagnosis-container">
+      <!-- 프로세스바 -->
+      <div class="progress-section">
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
         </div>
-      </header>
-
-      <main class="rpg-card">
-        <!-- 퀘스트 입력 섹션 -->
-        <section class="quest-section">
-          <div class="input-container">
-            <label for="visionInput">🎯 당신이 이해한 목표와 역할은 무엇인가요?</label>
-            <textarea 
-              id="visionInput" 
-              placeholder="그룹의 Mega Value와 업무의 가치, 과제를 명확히 이해한 나의 목표와 역할은.. "
-              rows="4"
-            ></textarea>
-          </div>
-        </section>
-
-        <!-- 직업군 탐색 버튼 -->
-        <section class="discover-section">
-          <div class="discover-container">
-            <h3>🎯 캐릭터 분석</h3>
-            <p>당신에게 맞는 직업 캐릭터를 찾아보세요</p>
-            <button id="findClassBtn" class="discover-btn">
-              <span class="btn-text">분석하기</span>
-              ✨
-            </button>
-          </div>
-        </section>
-      </main>
-
-      <!-- RPG 스타일 모달 팝업 -->
-      <div id="modal" class="rpg-modal hidden">
-        <div class="modal-backdrop"></div>
-        <div class="character-card">
-          <button id="closeModal" class="close-btn">&times;</button>
-          
-          
-          
-          <div class="character-details">
-            <h2 id="characterName" class="character-title"></h2>
-            <div class="character-stats">
-              <div id="characterDescription" class="character-desc"></div>
-            </div>
-            
-            <div class="character-footer">
-              <div class="rarity-badge">★★★★★ 전설급 직업군</div>
-            </div>
-          </div>
+        <div class="progress-text">
+          <span id="currentStep">1</span> / <span id="totalSteps">9</span>
         </div>
       </div>
+
+      <!-- 질문 섹션 -->
+      <div id="questionSection" class="question-section">
+        <h3 id="questionTitle" class="question-title"></h3>
+        <div id="choicesContainer" class="choices-container"></div>
+        <div id="subjectiveContainer" class="subjective-container hidden">
+          <textarea id="subjectiveInput" class="subjective-input" placeholder="최소 20자 이상 입력해주세요..." rows="5"></textarea>
+          <div class="char-counter">
+            <span id="charCount">0</span> / 20자 (최소)
+          </div>
+        </div>
+        <button id="nextBtn" class="next-btn hidden">다음</button>
+        <button id="completeBtn" class="complete-btn hidden">캐릭터 확인하기</button>
+        <button id="restartBtn" class="restart-btn hidden">처음부터 다시하기</button>
+      </div>
     </div>
-    
-    <!-- 배경 장식 요소들 -->
-    <div class="bg-decorations">
-      <div class="floating-element sword">⚔️</div>
-      <div class="floating-element shield">🛡️</div>
-      <div class="floating-element magic">✨</div>
-      <div class="floating-element bow">🏹</div>
-      <div class="floating-element crystal">💎</div>
+  </div>
+
+  <!-- 매칭 중 화면 -->
+  <div id="matchingScreen" class="screen hidden">
+    <div class="matching-container">
+      <div class="matching-animation">
+        <div class="spinner"></div>
+        <h3>매칭 중...</h3>
+        <p>캐릭터를 매칭하고 있습니다</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 결과 팝업 -->
+  <div id="resultModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="closeModal" class="close-btn">&times;</button>
+      <div class="result-content">
+        <h3 id="characterName" class="character-name"></h3>
+        <div id="characterDescription" class="character-description"></div>
+      </div>
     </div>
   </div>
 

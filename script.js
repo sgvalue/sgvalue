@@ -1,284 +1,354 @@
-
-// 전역 상태 관리 객체
-const AppState = {
-  userVision: '', // 사용자 입력 텍스트를 저장하는 전역 상태
-  
-  // 상태 업데이트 함수
-  setUserVision(vision) {
-    this.userVision = vision;
-  },
-  
-  // 상태 조회 함수  
-  getUserVision() {
-    return this.userVision;
-  }
-};
-
-// 랜덤 퍼센트 생성 함수
-function getRandomPercentage() {
-  const percentages = [90, 95, 100];
-  return percentages[Math.floor(Math.random() * percentages.length)];
-}
-
-// 랜덤 추가 속성 생성 함수
-function getRandomAdditionalAttribute() {
-  const attributes = [
-    {
-      icon: "🔥",
-      name: "열정",
-      description: "강력한 동기부여와 에너지로 팀 전체의 분위기를 끌어올림"
-    },
-    {
-      icon: "🎯",
-      name: "사명감",
-      description: "조직의 목표 달성을 위한 확고한 신념과 책임감으로 성과 창출"
-    }
-  ];
-  return attributes[Math.floor(Math.random() * attributes.length)];
-}
-
-// RPG 직업군 캐릭터 데이터 배열 (5개의 캐릭터)
-const CHARACTERS = [
+// 진단 질문 데이터 (1~8번 선택형)
+const QUESTIONS = [
   {
-    name: "⚔️ 전사 (Warrior)",
-    description: `
-      <strong>직업 특성:</strong> 최전선에서 조직을 수호하는 강력한 방패<br><br>
-      
-      <strong>스킬:</strong><br>
-      • 위기 관리 마스터리 (Crisis Management Mastery)<br>
-      • 팀 보호 오라 (Team Protection Aura)<br>
-      • 책임감 버프 (Responsibility Buff)<br><br>
-      
-      <strong>조직 기여도:</strong><br>
-      🗣️ <strong>소통력 +{communicationPercent}%:</strong> '이해'를 목적으로 다양한 범위에서 협업할 수 있도록 온라인/오프라인을 망라하여 상호 간 생각하는 바를 명확히 표현<br>
-      🤝 <strong>공유력 +{sharingPercent}%:</strong> '이해'를 목적으로, 시간과 거리의 한계를 넘어 협업의 범위를 확장시키고, 지속적인 Know-how 공유 차원에서 Material을 주고 받음<br>
-      {additionalIcon} <strong>{additionalName} +{additionalPercent}%:</strong> {additionalDescription}
-    `
+    id: 1,
+    question: "새로운 게임 프로젝트 기획 회의 중<br>당신은 어떤 말을 더 자주 하나요?",
+    choices: [
+      { text: "(A) 이거 정말 대박 아이디어 같아요! 이대로 만들면 엄청 재미있을 거예요!", score: { 개방성: 1 } },
+      { text: "(B) 기존 성공작들의 데이터를 분석해보니, 개선점이 좀 있네요.", score: { 신경증: 1 } }
+    ]
   },
   {
-    name: "🧙‍♂️ 마법사 (Mage)", 
-    description: `
-      <strong>직업 특성:</strong> 창의적 마법으로 불가능을 가능하게 만드는 혁신자<br><br>
-      
-      <strong>스킬:</strong><br>
-      • 창조 마법 (Creation Magic)<br>
-      • 혁신 주문 (Innovation Spell)<br>
-      • 미래 예측술 (Future Sight)<br><br>
-      
-      <strong>조직 기여도:</strong><br>
-      🗣️ <strong>소통력 +{communicationPercent}%:</strong> '이해'를 목적으로 다양한 범위에서 협업할 수 있도록 온라인/오프라인을 망라하여 상호 간 생각하는 바를 명확히 표현<br>
-      🤝 <strong>공유력 +{sharingPercent}%:</strong> '이해'를 목적으로, 시간과 거리의 한계를 넘어 협업의 범위를 확장시키고, 지속적인 Know-how 공유 차원에서 Material을 주고 받음<br>
-      {additionalIcon} <strong>{additionalName} +{additionalPercent}%:</strong> {additionalDescription}
-    `
+    id: 2,
+    question: "게임 출시일이 임박했을 때 당신이라면?",
+    choices: [
+      { text: "(A) 출시 전 마지막 빌드 점검! 버그 하나 놓치지 않고 완벽하게 확인해야지.", score: { 성실성: 1 } },
+      { text: "(B) 막판까지 최적화해야지! 출시 직전까지도 개선은 계속되어야 해.", score: { 개방성: 1 } }
+    ]
   },
   {
-    name: "🏹 궁수 (Archer)",
-    description: `
-      <strong>직업 특성:</strong> 정확한 소통으로 모든 이를 하나로 연결하는 중재자<br><br>
-      
-      <strong>스킬:</strong><br>
-      • 정밀 소통술 (Precision Communication)<br>
-      • 갈등 해결 화살 (Conflict Resolution Arrow)<br>
-      • 팀워크 강화 사격 (Teamwork Enhancement Shot)<br><br>
-      
-      <strong>조직 기여도:</strong><br>
-      🗣️ <strong>소통력 +{communicationPercent}%:</strong> '이해'를 목적으로 다양한 범위에서 협업할 수 있도록 온라인/오프라인을 망라하여 상호 간 생각하는 바를 명확히 표현<br>
-      🤝 <strong>공유력 +{sharingPercent}%:</strong> '이해'를 목적으로, 시간과 거리의 한계를 넘어 협업의 범위를 확장시키고, 지속적인 Know-how 공유 차원에서 Material을 주고 받음<br>
-      {additionalIcon} <strong>{additionalName} +{additionalPercent}%:</strong> {additionalDescription}
-    `
+    id: 3,
+    question: "지스타 같은 대규모 행사에 간 당신, 당신이 담당자라면?",
+    choices: [
+      { text: "(A) 저희 부스에 놀러 오세요! 제가 직접 시연 보여드릴게요!", score: { 외향성: 1 } },
+      { text: "(B) 부스 뒤에서 유저들 반응이나 조용히 관찰하는 게 편해.", score: { 외향성: -1 } }
+    ]
   },
   {
-    name: "🔍 도적 (Rogue)",
-    description: `
-      <strong>직업 특성:</strong> 숨겨진 정보를 찾아내어 전략적 우위를 제공하는 정보 전문가<br><br>
-      
-      <strong>스킬:</strong><br>
-      • 데이터 탐지술 (Data Detection)<br>
-      • 분석 은신술 (Analysis Stealth)<br>
-      • 치명적 인사이트 (Critical Insight)<br><br>
-      
-      <strong>조직 기여도:</strong><br>
-      🗣️ <strong>소통력 +{communicationPercent}%:</strong> '이해'를 목적으로 다양한 범위에서 협업할 수 있도록 온라인/오프라인을 망라하여 상호 간 생각하는 바를 명확히 표현<br>
-      🤝 <strong>공유력 +{sharingPercent}%:</strong> '이해'를 목적으로, 시간과 거리의 한계를 넘어 협업의 범위를 확장시키고, 지속적인 Know-how 공유 차원에서 Material을 주고 받음<br>
-      {additionalIcon} <strong>{additionalName} +{additionalPercent}%:</strong> {additionalDescription}
-    `
+    id: 4,
+    question: "의견 충돌이 생겼을 때 당신의 평소 반응은?",
+    choices: [
+      { text: "(A) 서로 조금씩 양보해서 좀 더 이야기 해보시죠.", score: { 친화성: 1 } },
+      { text: "(B) (내 주장이 더 논리적인데) 저를 한 번 믿어보시죠!", score: { 친화성: -1 } }
+    ]
   },
   {
-    name: "⚡ 광전사 (Berserker)",
-    description: `
-      <strong>직업 특성:</strong> 압도적인 실행력으로 모든 장애물을 돌파하는 추진 엔진<br><br>
-      
-      <strong>스킬:</strong><br>
-      • 번개 실행술 (Lightning Execution)<br>
-      • 열정 폭발 (Passion Burst)<br>
-      • 불굴의 의지 (Indomitable Will)<br><br>
-      
-      <strong>조직 기여도:</strong><br>
-      🗣️ <strong>소통력 +{communicationPercent}%:</strong> '이해'를 목적으로 다양한 범위에서 협업할 수 있도록 온라인/오프라인을 망라하여 상호 간 생각하는 바를 명확히 표현<br>
-      🤝 <strong>공유력 +{sharingPercent}%:</strong> '이해'를 목적으로, 시간과 거리의 한계를 넘어 협업의 범위를 확장시키고, 지속적인 Know-how 공유 차원에서 Material을 주고 받음<br>
-      {additionalIcon} <strong>{additionalName} +{additionalPercent}%:</strong> {additionalDescription}
-    `
+    id: 5,
+    question: "게임 서비스 중 예상치 못한 치명적인 오류가 발생했다! 당신이라면?",
+    choices: [
+      { text: "(A) 당장 패치해야 해! 유저들 항의 쇄도하겠네!ㅠㅠ", score: { 신경증: 1 } },
+      { text: "(B) 침착해.. 원인을 분석하고 빠르게 해결책을 찾아보자!ㅠㅠ", score: { 신경증: -1 } }
+    ]
+  },
+  {
+    id: 6,
+    question: "신작 게임을 플레이할 때 당신은?",
+    choices: [
+      { text: "(A) 일단 해보는 거지, 죽으면서 배우는 거야!", score: { 개방성: 1 } },
+      { text: "(B) 튜토리얼부터 철저히 파악하고, 공략집도 찾아보자.", score: { 성실성: 1 } }
+    ]
+  },
+  {
+    id: 7,
+    question: "게임 유저 커뮤니티나 포럼을 탐색할 때 당신은?",
+    choices: [
+      { text: "(A) 어떤 이야기가 오가는지 항상 궁금해! 모든 글이 다 정보지.", score: { 친화성: 1 } },
+      { text: "(B) 너무 정신없어..중요한 내용만 우선 골라서 보자.", score: { 신경증: 1 } }
+    ]
+  },
+  {
+    id: 8,
+    question: "퇴근 후 당신은 주로?",
+    choices: [
+      { text: "(A) 친구들이랑 같이 피씨방 가서 신작 게임 돌려봐야지!", score: { 외향성: 1 } },
+      { text: "(B) 혼자가 좋아. 집에서 혼자 게임 관련 유튜브 봐야지.", score: { 외향성: -1 } }
+    ]
   }
 ];
 
+// 캐릭터 데이터
+const CHARACTERS = {
+  개방성: {
+    name: "🧙‍♂️ 마법사",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop&crop=face",
+    description: "새로운 아이디어와 지식에 대한 끝없는 탐구심을 가진 당신은 미지의 마법을 배우고 새로운 해결책을 찾아내는 마법사나 고대 지식을 탐구하는 현자와 같습니다. 당신은 조직에서 변화를 두려워하지 않고 창의적인 방식으로 업무에 접근하며, 항상 새로운 시도를 하는군요!"
+  },
+  성실성: {
+    name: "⚔️ 팔라딘",
+    image: "https://images.unsplash.com/photo-1504593811423-6dd665756598?w=200&h=200&fit=crop&crop=face",
+    description: "맡은 바 임무를 철저히 수행하고, 약속과 기한을 중요하게 여기는 당신은 성스러운 맹세를 지키는 팔라딘과 닮았습니다. 당신은 조직에서 꾸준한 노력과 철저한 준비로 팀의 든든한 버팀목이 되며, 어떤 업무든 당신에게 맡기면 안심할 수 있겠네요!"
+  },
+  외향성: {
+    name: "⚡ 버서커",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    description: "사람들과의 교류를 즐기고 에너지가 넘치는 당신은 동료들을 이끌고 전장에서 용맹하게 앞장서는 버서커와 같습니다. 당신은 조직에서 활발한 소통으로 팀 분위기를 밝게 만들고, 사람들을 하나로 모으는 능력으로 긍정적인 영향을 미치고 있어요!"
+  },
+  친화성: {
+    name: "💚 힐러",
+    image: "https://images.unsplash.com/photo-1494790108755-2616c4e9a234?w=200&h=200&fit=crop&crop=face",
+    description: "타인의 감정에 공감하고 배려심이 깊은 당신은 아픈 동료를 치유하고 정신적으로 지지해주는 힐러와 같습니다. 당신은 조직에서 갈등을 중재하고 조화로운 관계를 만들며, 따뜻한 마음으로 주변 사람들을 보살피고 있네요! 당신 덕분에 조직의 분위기가 항상 온화하답니다."
+  },
+  신경증: {
+    name: "🗡️ 어쌔신",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    description: "섬세하고 예민하여 주변 환경에 민감하게 반응하는 당신은 위험을 감지하고 신중하게 움직이는 어쌔신과 유사합니다. 당신은 조직에서 주변을 면밀히 살피고 잠재적인 위험을 감지하고 있어요. 높은 통찰력으로 상황을 분석하고 전략적인 움직임으로 목표를 달성하는군요!"
+  }
+};
+
+// 전역 변수
+let currentQuestionIndex = 0;
+let scores = { 개방성: 0, 성실성: 0, 외향성: 0, 친화성: 0, 신경증: 0 };
+let selectedChoice = null;
+let subjectiveAnswer = '';
+
 // DOM 요소들
-const visionInput = document.getElementById('visionInput');
-const findClassBtn = document.getElementById('findClassBtn');
-const modal = document.getElementById('modal');
-const closeModalBtn = document.getElementById('closeModal');
+const mainScreen = document.getElementById('mainScreen');
+const diagnosisScreen = document.getElementById('diagnosisScreen');
+const matchingScreen = document.getElementById('matchingScreen');
+const resultModal = document.getElementById('resultModal');
+const startBtn = document.getElementById('startBtn');
+const progressFill = document.getElementById('progressFill');
+const currentStep = document.getElementById('currentStep');
+const totalSteps = document.getElementById('totalSteps');
+const questionTitle = document.getElementById('questionTitle');
+const choicesContainer = document.getElementById('choicesContainer');
+const subjectiveContainer = document.getElementById('subjectiveContainer');
+const subjectiveInput = document.getElementById('subjectiveInput');
+const charCount = document.getElementById('charCount');
+const nextBtn = document.getElementById('nextBtn');
+const completeBtn = document.getElementById('completeBtn');
+const restartBtn = document.getElementById('restartBtn');
+const closeModal = document.getElementById('closeModal');
 const characterName = document.getElementById('characterName');
 const characterDescription = document.getElementById('characterDescription');
 
-// 이벤트 리스너 등록
+// 이벤트 리스너
 document.addEventListener('DOMContentLoaded', initializeApp);
 
 function initializeApp() {
-  // 입력창 변화 감지하여 전역 상태 업데이트
-  visionInput.addEventListener('input', handleVisionInput);
-  
-  // 클래스 찾기 버튼 클릭 이벤트
-  findClassBtn.addEventListener('click', handleFindClass);
-  
-  // 모달 닫기 이벤트들
-  closeModalBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', handleModalClick);
-  
-  // ESC 키로 모달 닫기
-  document.addEventListener('keydown', handleKeydown);
-  
-  console.log('앱이 초기화되었습니다.');
+  startBtn.addEventListener('click', startDiagnosis);
+  nextBtn.addEventListener('click', nextQuestion);
+  completeBtn.addEventListener('click', completeDiagnosis);
+  restartBtn.addEventListener('click', restartDiagnosis);
+  closeModal.addEventListener('click', closeResultModal);
+  resultModal.addEventListener('click', handleModalClick);
+  subjectiveInput.addEventListener('input', handleSubjectiveInput);
+
+  totalSteps.textContent = 9; // 8개 객관식 + 1개 주관식
 }
 
-// 사용자 입력 처리 함수
-function handleVisionInput(event) {
-  const inputValue = event.target.value;
-  AppState.setUserVision(inputValue);
-  console.log('사용자 비전이 업데이트되었습니다:', AppState.getUserVision());
+function startDiagnosis() {
+  mainScreen.classList.add('hidden');
+  diagnosisScreen.classList.remove('hidden');
+  currentQuestionIndex = 0;
+  scores = { 개방성: 0, 성실성: 0, 외향성: 0, 친화성: 0, 신경증: 0 };
+  showQuestion();
 }
 
-// 클래스 찾기 버튼 클릭 처리
-function handleFindClass() {
-  const userVision = AppState.getUserVision();
-  
-  // 입력값이 없는 경우 알림
-  if (!userVision.trim()) {
-    alert('먼저 조직 비전 달성을 위한 목표와 역할을 입력해주세요!');
-    visionInput.focus();
+function showQuestion() {
+  // 1~8번 객관식 질문 처리
+  if (currentQuestionIndex >= QUESTIONS.length) {
+    showSubjectiveQuestion();
     return;
   }
-  
-  // 랜덤 캐릭터 선택 및 팝업 표시
-  const randomCharacter = getRandomCharacter();
-  showCharacterModal(randomCharacter);
-  
-  console.log('선택된 캐릭터:', randomCharacter.name);
+
+  const question = QUESTIONS[currentQuestionIndex];
+  questionTitle.innerHTML = question.question;
+
+  // 선택형 질문 표시
+  choicesContainer.innerHTML = '';
+  choicesContainer.classList.remove('hidden');
+
+  // 주관식 완전히 숨기기
+  subjectiveContainer.classList.add('hidden');
+
+  // 1~8번에는 다음 버튼만 (숨김 상태)
+  nextBtn.classList.add('hidden');
+  completeBtn.classList.add('hidden');
+
+  // 선택지 생성
+  question.choices.forEach((choice, index) => {
+    const choiceBtn = document.createElement('button');
+    choiceBtn.className = 'choice-btn';
+    choiceBtn.textContent = choice.text;
+    choiceBtn.addEventListener('click', () => selectChoice(index, choice));
+    choicesContainer.appendChild(choiceBtn);
+  });
+
+  selectedChoice = null;
+  updateProgress();
 }
 
-// 랜덤 캐릭터 선택 함수
-function getRandomCharacter() {
-  const randomIndex = Math.floor(Math.random() * CHARACTERS.length);
-  const character = CHARACTERS[randomIndex];
-  
-  // 랜덤 퍼센트 생성
-  const communicationPercent = getRandomPercentage();
-  const sharingPercent = getRandomPercentage();
-  const additionalPercent = getRandomPercentage();
-  
-  // 랜덤 추가 속성 선택
-  const additionalAttribute = getRandomAdditionalAttribute();
-  
-  // 설명 문자열에 랜덤 값들을 적용
-  const processedDescription = character.description
-    .replace(/{communicationPercent}/g, communicationPercent)
-    .replace(/{sharingPercent}/g, sharingPercent)
-    .replace(/{additionalPercent}/g, additionalPercent)
-    .replace(/{additionalIcon}/g, additionalAttribute.icon)
-    .replace(/{additionalName}/g, additionalAttribute.name)
-    .replace(/{additionalDescription}/g, additionalAttribute.description);
-  
-  return {
-    ...character,
-    description: processedDescription
-  };
+function selectChoice(index, choice) {
+  // 이전 선택 해제
+  document.querySelectorAll('.choice-btn').forEach(btn => btn.classList.remove('selected'));
+
+  // 현재 선택 표시
+  document.querySelectorAll('.choice-btn')[index].classList.add('selected');
+
+  selectedChoice = choice;
+
+  // 1~8번에서는 다음 버튼만 표시
+  nextBtn.classList.remove('hidden');
+  completeBtn.classList.add('hidden');
 }
 
-// 캐릭터 모달 표시 함수
-function showCharacterModal(character) {
+function nextQuestion() {
+  if (selectedChoice) {
+    // 점수 적용
+    Object.keys(selectedChoice.score).forEach(trait => {
+      scores[trait] += selectedChoice.score[trait];
+    });
+
+    currentQuestionIndex++;
+
+    // 8번 완료 후 9번 주관식으로 이동
+    if (currentQuestionIndex >= QUESTIONS.length) {
+      showSubjectiveQuestion();
+    } else {
+      showQuestion();
+    }
+  }
+}
+
+function showSubjectiveQuestion() {
+  // 9번째 주관식 질문
+  questionTitle.innerHTML = "우리 조직의 방향성을 생각할 때<br>여러분 업무의 목표와 역할은 무엇인가요?<br>상세하게 적어주세요!";
+
+  // 선택형 질문 완전히 숨기기
+  choicesContainer.classList.add('hidden');
+  choicesContainer.innerHTML = '';
+
+  // 주관식 박스 보이기
+  subjectiveContainer.classList.remove('hidden');
+
+  // 9번에는 캐릭터 확인하기 버튼만
+  nextBtn.classList.add('hidden');
+  completeBtn.classList.remove('hidden');
+
+  // 버튼 상태 업데이트
+  updateCompleteButton();
+  updateProgress();
+}
+
+function handleSubjectiveInput() {
+  subjectiveAnswer = subjectiveInput.value;
+  updateCharCount();
+  updateCompleteButton();
+}
+
+function updateCharCount() {
+  charCount.textContent = subjectiveAnswer.length;
+  charCount.style.color = subjectiveAnswer.length >= 20 ? '#48bb78' : '#e53e3e';
+}
+
+function updateCompleteButton() {
+  if (subjectiveAnswer.length >= 20) {
+    completeBtn.disabled = false;
+  } else {
+    completeBtn.disabled = true;
+  }
+}
+
+function completeDiagnosis() {
+  if (subjectiveAnswer.length >= 20) {
+    diagnosisScreen.classList.add('hidden');
+    matchingScreen.classList.remove('hidden');
+
+    // 2초 후 결과 표시
+    setTimeout(() => {
+      showResult();
+    }, 2000);
+  }
+}
+
+function showResult() {
+  matchingScreen.classList.add('hidden');
+  diagnosisScreen.classList.remove('hidden');
+
+  // 가장 높은 점수의 성향 찾기
+  const maxScore = Math.max(...Object.values(scores));
+  const topTraits = Object.keys(scores).filter(trait => scores[trait] === maxScore);
+
+  // 동점일 경우 일관성 있는 랜덤 선택
+  let selectedTrait;
+  if (topTraits.length === 1) {
+    selectedTrait = topTraits[0];
+  } else {
+    // 점수 조합으로 시드 생성 (동일한 점수 조합은 동일한 결과)
+    const scoreString = Object.values(scores).join(',');
+    const seed = scoreString.split('').reduce((acc, char, index) => {
+      return acc + char.charCodeAt(0) * (index + 1);
+    }, 0);
+
+    // 시드 기반 랜덤 선택
+    const selectedIndex = seed % topTraits.length;
+    selectedTrait = topTraits[selectedIndex];
+  }
+
+  const character = CHARACTERS[selectedTrait];
+
   characterName.textContent = character.name;
-  characterDescription.innerHTML = character.description;
-  
-  
-  
-  // 모달 표시 (hidden 클래스 제거)
-  modal.classList.remove('hidden');
-  
-  // 접근성을 위한 포커스 설정
-  closeModalBtn.focus();
-  
-  // 스크롤 방지
-  document.body.style.overflow = 'hidden';
+  characterDescription.textContent = character.description;
+
+  resultModal.classList.remove('hidden');
 }
 
-// 모달 닫기 함수
-function closeModal() {
-  modal.classList.add('hidden');
-  
-  // 스크롤 복원
-  document.body.style.overflow = 'auto';
-  
-  // 버튼으로 포커스 복귀
-  findClassBtn.focus();
-  
-  console.log('모달이 닫혔습니다. 입력된 텍스트는 유지됩니다.');
+function closeResultModal() {
+  resultModal.classList.add('hidden');
+  // 팝업을 닫으면 처음부터 다시하기 버튼 표시
+  restartBtn.classList.remove('hidden');
 }
 
-// 모달 배경 클릭 시 닫기
+function restartDiagnosis() {
+  // 모든 화면 숨기기
+  diagnosisScreen.classList.add('hidden');
+  matchingScreen.classList.add('hidden');
+  resultModal.classList.add('hidden');
+
+  // 메인 화면으로 돌아가기
+  mainScreen.classList.remove('hidden');
+
+  // 모든 상태 초기화
+  currentQuestionIndex = 0;
+  scores = { 개방성: 0, 성실성: 0, 외향성: 0, 친화성: 0, 신경증: 0 };
+  selectedChoice = null;
+  subjectiveAnswer = '';
+
+  // 모든 버튼 숨기기
+  nextBtn.classList.add('hidden');
+  completeBtn.classList.add('hidden');
+  restartBtn.classList.add('hidden');
+
+  // 주관식 입력 초기화
+  subjectiveInput.value = '';
+  charCount.textContent = '0';
+}
+
 function handleModalClick(event) {
-  // 모달 콘텐츠 영역 외부 클릭 시에만 닫기
-  if (event.target === modal || event.target.classList.contains('modal-backdrop')) {
-    closeModal();
+  if (event.target === resultModal || event.target.classList.contains('modal-backdrop')) {
+    closeResultModal();
   }
 }
 
-// 키보드 이벤트 처리 (ESC 키로 모달 닫기)
-function handleKeydown(event) {
-  if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
-    closeModal();
+function updateProgress() {
+  let currentStepNumber;
+  if (currentQuestionIndex < QUESTIONS.length) {
+    // 1~8번 객관식 질문
+    currentStepNumber = currentQuestionIndex + 1;
+  } else {
+    // 9번 주관식 질문
+    currentStepNumber = 9;
   }
+
+  const progress = (currentStepNumber / 9) * 100;
+  progressFill.style.width = `${progress}%`;
+  currentStep.textContent = currentStepNumber;
 }
 
-// 유틸리티 함수들
-const Utils = {
-  // 디바운스 함수 (필요시 사용)
-  debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  },
-  
-  // 로컬 스토리지에 상태 저장 (선택적 기능)
-  saveToLocalStorage(key, value) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn('로컬 스토리지 저장 실패:', error);
-    }
-  },
-  
-  // 로컬 스토리지에서 상태 불러오기
-  loadFromLocalStorage(key) {
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : null;
-    } catch (error) {
-      console.warn('로컬 스토리지 불러오기 실패:', error);
-      return null;
-    }
+// ESC 키로 모달 닫기
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !resultModal.classList.contains('hidden')) {
+    closeResultModal();
   }
-};
+});
