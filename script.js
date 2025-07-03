@@ -5,7 +5,7 @@ const QUESTIONS = [
     question: "새로운 게임 프로젝트 기획 회의 중<br>당신은 어떤 말을 더 자주 하나요?",
     choices: [
       { text: "(A) 이거 정말 대박 아이디어 같아요! 이대로 만들면 엄청 재미있을 거예요!", score: { 개방성: 1 } },
-      { text: "(B) 기존 성공작들의 데이터를 분석해보니, 개선점이 좀 있네요.", score: { 성실성: 1 } }
+      { text: "(B) 기존 성공작들의 데이터를 분석해보니, 개선점이 좀 있네요.", score: { 신경증: 1 } }
     ]
   },
   {
@@ -13,12 +13,12 @@ const QUESTIONS = [
     question: "게임 출시일이 임박했을 때 당신이라면?",
     choices: [
       { text: "(A) 출시 전 마지막 빌드 점검! 버그 하나 놓치지 않고 완벽하게 확인해야지.", score: { 성실성: 1 } },
-      { text: "(B) 기존 성공작들의 데이터를 분석해보니, 개선점이 좀 있네요.", score: { 신경증: 1 } }
+      { text: "(B) 막판까지 최적화해야지! 출시 직전까지도 개선은 계속되어야 해.", score: { 개방성: 1 } }
     ]
   },
   {
     id: 3,
-    question: "지스타 같은 대규모 행사에 간 당신, 당신이 담당자라면?",
+    question: "지스타 같은 대규모 행사의 담당자가 되었다! 당신이라면?",
     choices: [
       { text: "(A) 저희 부스에 놀러 오세요! 제가 직접 시연 보여드릴게요!", score: { 외향성: 1 } },
       { text: "(B) 방문한 유저들을 조용히 도와주고 설명해주는 게 좋아.", score: { 친화성: 1 } }
@@ -34,9 +34,9 @@ const QUESTIONS = [
   },
   {
     id: 5,
-    question: "게임 서비스 중 예상치 못한 치명적인 오류가 발생했다! 당신이라면?",
+    question: "게임 서비스 중 예상치 못한 치명적인 오류가 발생했다!?",
     choices: [
-      { text: "(A) 당장 패치해야 해! 유저들 항의 쇄도하겠네!ㅠㅠ", score: { 신경증: 1 } },
+      { text: "(A) 당장 패치해야 해! 유저들 항의가 쇄도하겠네!ㅠㅠ", score: { 신경증: 1 } },
       { text: "(B) 침착해.. 원인을 분석하고 빠르게 해결책을 찾아보자!ㅠㅠ", score: { 성실성: 1 } }
     ]
   },
@@ -60,8 +60,8 @@ const QUESTIONS = [
     id: 8,
     question: "퇴근 후 당신은 주로?",
     choices: [
-      { text: "(A) 집에가서 친구들이랑 같이 게임 서버에서 만나야겠다!", score: { 친화성: 1 } },
-      { text: "(B) 만날 사람, 할 일이 너무 많아. 바쁘다 바뻐!", score: { 외향성: 1 } }
+      { text: "(A) 친구들이랑 게임 서버에서 만나기로 했어!", score: { 친화성: 1 } },
+      { text: "(B) 저녁 약속에, 할 일이 너무 많아. 바쁘다 바뻐!", score: { 외향성: 1 } }
     ]
   }
 ];
@@ -70,27 +70,27 @@ const QUESTIONS = [
 const CHARACTERS = {
   개방성: {
     name: "🧙‍♂️ 마법사",
-    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop&crop=face",
+    image: "attached_assets/1.%20개방성%20마법사_1751530976675.JPG",
     description: "새로운 아이디어와 지식에 대한 끝없는 탐구심을 가진 당신은 미지의 마법을 배우고 새로운 해결책을 찾아내는 마법사나 고대 지식을 탐구하는 현자와 같습니다. 당신은 조직에서 변화를 두려워하지 않고 창의적인 방식으로 업무에 접근하며, 항상 새로운 시도를 하는군요!"
   },
   성실성: {
     name: "⚔️ 팔라딘",
-    image: "https://images.unsplash.com/photo-1504593811423-6dd665756598?w=200&h=200&fit=crop&crop=face",
+    image: "attached_assets/2.%20성실성%20팔라딘_1751530976676.JPG",
     description: "맡은 바 임무를 철저히 수행하고, 약속과 기한을 중요하게 여기는 당신은 성스러운 맹세를 지키는 팔라딘과 닮았습니다. 당신은 조직에서 꾸준한 노력과 철저한 준비로 팀의 든든한 버팀목이 되며, 어떤 업무든 당신에게 맡기면 안심할 수 있겠네요!"
   },
   외향성: {
     name: "⚡ 버서커",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    image: "attached_assets/3.%20외향성%20버서커_1751530976676.JPG",
     description: "사람들과의 교류를 즐기고 에너지가 넘치는 당신은 동료들을 이끌고 전장에서 용맹하게 앞장서는 버서커와 같습니다. 당신은 조직에서 활발한 소통으로 팀 분위기를 밝게 만들고, 사람들을 하나로 모으는 능력으로 긍정적인 영향을 미치고 있어요!"
   },
   친화성: {
     name: "💚 힐러",
-    image: "https://images.unsplash.com/photo-1494790108755-2616c4e9a234?w=200&h=200&fit=crop&crop=face",
+    image: "attached_assets/4.%20친화성%20힐러_1751530976676.JPG",
     description: "타인의 감정에 공감하고 배려심이 깊은 당신은 아픈 동료를 치유하고 정신적으로 지지해주는 힐러와 같습니다. 당신은 조직에서 갈등을 중재하고 조화로운 관계를 만들며, 따뜻한 마음으로 주변 사람들을 보살피고 있네요! 당신 덕분에 조직의 분위기가 항상 온화하답니다."
   },
   신경증: {
     name: "🗡️ 어쌔신",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+    image: "attached_assets/5.%20신경증%20어쌔신_1751530976676.JPG",
     description: "섬세하고 예민하여 주변 환경에 민감하게 반응하는 당신은 위험을 감지하고 신중하게 움직이는 어쌔신과 유사합니다. 당신은 조직에서 주변을 면밀히 살피고 잠재적인 위험을 감지하고 있어요. 높은 통찰력으로 상황을 분석하고 전략적인 움직임으로 목표를 달성하는군요!"
   }
 };
@@ -288,8 +288,10 @@ function showResult() {
 
   const character = CHARACTERS[selectedTrait];
 
-  characterName.textContent = character.name;
-  characterDescription.textContent = character.description;
+  characterName.textContent = '';
+  characterDescription.innerHTML = `
+    <img src="${character.image}" alt="${character.name}" class="character-image" />
+  `;
 
   resultModal.classList.remove('hidden');
 }
